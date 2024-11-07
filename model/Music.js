@@ -6,6 +6,9 @@ const musicSchema = new mongoose.Schema({
   artist: {
     type: String,
   },
+  email: {
+    type: String,
+  },
   avatar: {
     type: String,
   },

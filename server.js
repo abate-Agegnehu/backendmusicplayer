@@ -5,7 +5,6 @@ const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 dotenv.config();
 
-
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => console.log("mongoDB is connected"))
@@ -13,7 +12,8 @@ mongoose
 app.use(cors());
 app.use(express.json());
 
-app.use("/music",require("./routes/music.route"))
+app.use("/music", require("./routes/music.route"));
+app.use("/user", require("./routes/user.route"));
 
 app.listen(9999, () => {
   console.log("Server is running");

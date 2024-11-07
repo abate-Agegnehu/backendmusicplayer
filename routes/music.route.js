@@ -1,4 +1,3 @@
-
 const router = require("express").Router();
 const cloudinary = require("../utils/cloudinary");
 const upload = require("../utils/multer");
@@ -11,10 +10,10 @@ router.post("/", upload.single("video"), async (req, res) => {
       resource_type: "video",
     });
 
-
     let music = new Music({
       title: req.body.title,
-      artist:req.body.artist,
+      artist: req.body.artist,
+      email: req.body.email,
       avatar: result.secure_url,
       cloudinary_id: result.public_id,
     });
@@ -31,6 +30,22 @@ router.get("/", async (req, res) => {
   try {
     let musics = await Music.find();
     res.json(musics);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+router.get("/:email", async (req, res) => {
+  const { email } = req.params;
+
+  try {
+    let musics = await Music.find({ email });
+
+    if (musics.length === 0) {
+      return res.status(404).json({ message: "No music found for this email" });
+    }
+
+    res.json(musics); 
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Server error" });
@@ -86,7 +101,8 @@ router.put("/:id", upload.single("video"), async (req, res) => {
 
     const data = {
       title: req.body.title || music.title,
-      artist:req.body.artist||music.artist,
+      artist: req.body.artist || music.artist,
+      email: req.body.email || music.email,
       avatar: result?.secure_url || music.avatar,
       cloudinary_id: result?.public_id || music.cloudinary_id,
     };
