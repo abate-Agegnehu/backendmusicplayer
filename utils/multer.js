@@ -1,11 +1,13 @@
-
 const multer = require("multer");
 const path = require("path");
 
 module.exports = multer({
   storage: multer.diskStorage({}),
+  limits: {
+    fileSize: 50 * 1024 * 1024, 
+  },
   fileFilter: (req, file, cb) => {
-    let ext = path.extname(file.originalname).toLowerCase();
+    const ext = path.extname(file.originalname).toLowerCase();
     if (ext !== ".mp4" && ext !== ".avi" && ext !== ".mov" && ext !== ".mkv") {
       cb(new Error("File type is not supported"), false);
       return;
@@ -13,4 +15,3 @@ module.exports = multer({
     cb(null, true);
   },
 });
-
